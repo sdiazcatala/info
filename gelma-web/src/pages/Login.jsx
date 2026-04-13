@@ -40,8 +40,14 @@ const Login = () => {
     generateCaptcha();
   });
 
+// const validatePassword = (password) => {
+//    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+//    return regex.test(password);
+//  };
+
   const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // Esta nueva regex acepta cualquier carácter especial, no solo una lista fija
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
     return regex.test(password);
   };
 
