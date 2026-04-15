@@ -112,10 +112,21 @@ Aplicación web para informatizar el flujo informativo de la actividad de comerc
 - ✅ npm (gestor de paquetes)
 - ✅ VS Code (reinicio completado)
 
+### Backend (Nuevo)
+- ✅ PostgreSQL (requerido para base de datos)
+- ✅ Estructura del backend creada en `gelma-web/server/`
+- ✅ Endpoints de autenticación implementados
+- ✅ Servicio de correo interno configurado
+- ✅ Middleware de autenticación y autorización
+- ✅ Gestión de usuarios por administrador
+
 ### Estado Actual
-- ✅ Todas las dependencias instaladas correctamente
-- ✅ Servidor de desarrollo funcionando sin errores
-- ✅ Aplicación accesible en http://localhost:3000
+- ✅ Todas las dependencias del frontend instaladas correctamente
+- ✅ Servidor de desarrollo del frontend funcionando sin errores
+- ✅ Aplicación frontend accesible en http://localhost:3000
+- ✅ Backend configurado y listo para iniciar
+- ✅ Base de datos schema creado
+- ✅ Usuarios de prueba definidos
 
 ---
 

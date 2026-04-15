@@ -1,12 +1,24 @@
 {
   "name": "gelma-backend",
   "version": "1.0.0",
-  "description": "Backend para GELMA con autenticación",
+  "description": "Backend para GELMA con autenticación, gestión de clientes, productos, pedidos y reportes",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:init": "psql -U postgres -d gelma_db -f database/schema.sql",
+    "db:seed": "psql -U postgres -d gelma_db -f database/seed.sql",
+    "db:setup": "npm run db:init && npm run db:seed"
   },
+  "keywords": [
+    "gelma",
+    "comercialización",
+    "autenticación",
+    "crud",
+    "reportes"
+  ],
+  "author": "GELMA",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -18,5 +30,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
