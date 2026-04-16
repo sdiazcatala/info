@@ -5,6 +5,7 @@ import Products from './pages/Products';
 import Orders from './pages/Orders';
 import Reports from './pages/Reports';
 import Login from './pages/Login';
+import VerifyEmail from './pages/VerifyEmail'; // Nueva página de verificación
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -12,37 +13,38 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Ruta pública de Login */}
+        {/* Rutas Públicas */}
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         
-        {/* Rutas protegidas */}
+        {/* Rutas Protegidas */}
         <Route path="/" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR', 'VIEWER']}>
             <Dashboard />
           </ProtectedRoute>
         } />
         <Route path="/dashboard" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR', 'VIEWER']}>
             <Dashboard />
           </ProtectedRoute>
         } />
         <Route path="/clients" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR']}>
             <Clients />
           </ProtectedRoute>
         } />
         <Route path="/products" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR']}>
             <Products />
           </ProtectedRoute>
         } />
         <Route path="/orders" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR']}>
             <Orders />
           </ProtectedRoute>
         } />
         <Route path="/reports" element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'EDITOR', 'VIEWER']}>
             <Reports />
           </ProtectedRoute>
         } />
