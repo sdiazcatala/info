@@ -1,176 +1,84 @@
-# GELMA - Sistema de Comercialización
+# ?? GELMA - Sistema de Gesti�n Empresarial
 
-Web application para informatizar el flujo informativo de la actividad de comercialización de la entidad GELMA.
+Plataforma web moderna para la gesti�n de clientes, productos, pedidos e informes, construida con **React**, **Node.js** y **PostgreSQL**, totalmente containerizada con **Docker**.
 
-## Características
+## ??? Tecnolog�as Utilizadas
 
-El sistema incluye las siguientes funcionalidades:
+- **Frontend:** React 18, Vite, TailwindCSS (si aplica), React Router.
+- **Backend:** Node.js, Express.js.
+- **Base de Datos:** PostgreSQL 15.
+- **Infraestructura:** Docker & Docker Compose.
+- **Servidor Web:** Nginx (para servir el frontend y proxy inverso).
 
-### 📊 Dashboard
-- Vista general con estadísticas clave
-- Resumen de clientes, productos y pedidos
-- Pedidos recientes con estado actualizado
-- Métricas de ventas del mes
+## ?? Requisitos Previos
 
-### 👥 Gestión de Clientes
-- Listado completo de clientes
-- Alta de nuevos clientes (mayoristas, minoristas, distribuidores)
-- Información de contacto completa
-- Eliminación de registros
+- **Docker Desktop** instalado y ejecut�ndose.
+- **Git** instalado.
+- No se requiere instalar Node.js ni PostgreSQL localmente (todo corre en contenedores).
 
-### 📦 Gestión de Productos
-- Catálogo de productos
-- Control de stock con indicadores visuales
-- Categorización de productos
-- Precios y descripciones detalladas
+## ? Inicio R�pido (Paso a Paso)
 
-### 🛒 Gestión de Pedidos
-- Creación de nuevos pedidos
-- Seguimiento de estado (Pendiente, En Proceso, Completado)
-- Cálculo automático de totales
-- Historial de pedidos por cliente
+Sigue estos pasos para levantar la aplicaci�n en tu entorno local:
 
-### 📈 Informes y Estadísticas
-- Informes de ventas mensuales con gráficos
-- Análisis de productos más vendidos
-- Reportes de actividad por cliente
-- Exportación a PDF y Excel (funcionalidad preparada)
-- Filtros por fecha y tipo de informe
+### 1. Clonar el Repositorio
+Abre tu terminal y clona el proyecto (aseg�rate de estar en la rama desarrollo):
 
-## Tecnologías Utilizadas
+ash
+git clone https://github.com/sdiazcatala/info.git
+cd info/gelma-web
+git checkout desarrollo
 
-- **Frontend**: React 18, Vite, React Router DOM, CSS3
-- **Backend**: Node.js, Express.js, JWT, bcryptjs
-- **Base de Datos**: PostgreSQL 15
-- **Containerización**: Docker, Docker Compose
-- **Servidor Web**: Nginx (para producción)
 
-## Instalación
+### 2. Configurar Variables de Entorno
+Crea el archivo .env copiando el ejemplo:
 
-### Opción 1: Con Docker (Recomendado)
-
-```bash
-# Navegar al directorio del proyecto
-cd gelma-web
-
-# Configurar variables de entorno
+ash
 cp .env.example .env
-# Editar .env con tus configuraciones
 
-# Iniciar todos los servicios
-docker-compose up -d
+*(En Windows PowerShell usa: Copy-Item .env.example .env)*
 
-# Ver logs
-docker-compose logs -f
-```
+> **Nota:** Puedes editar el archivo .env si necesitas cambiar puertos o credenciales, pero los valores por defecto funcionan inmediatamente.
 
-Para más detalles, consulta [Documentación Docker](docs/DOCKER.md).
+### 3. Levantar la Aplicaci�n
+Ejecuta el siguiente comando para construir y arrancar todos los servicios (Base de datos, Backend y Frontend):
 
-### Opción 2: Manual (Desarrollo)
+ash
+docker compose up -d
 
-```bash
-# Navegar al directorio del proyecto
-cd gelma-web
 
-# Instalar dependencias del frontend
-npm install
+*La primera vez tardar� unos minutos mientras descarga las im�genes.*
 
-# Iniciar servidor de desarrollo del frontend
-npm run dev
+### 4. Acceder a la Aplicaci�n
+Una vez que los contenedores est�n activos:
 
-# En otra terminal, instalar dependencias del backend
-cd server
-npm install
+- ?? **Frontend (Interfaz):** [http://localhost](http://localhost)
+- ?? **API (Backend):** [http://localhost:5000/api](http://localhost:5000/api)
+- ??? **Base de Datos:** localhost:5432 (solo para conexiones internas o herramientas externas)
 
-# Iniciar servidor de desarrollo del backend
-npm run dev
-```
+## ?? Comandos �tiles de Docker
 
-## Estructura del Proyecto
+| Acci�n | Comando |
+| :--- | :--- |
+| **Ver estado** | docker compose ps |
+| **Ver logs en tiempo real** | docker compose logs -f |
+| **Detener aplicaci�n** | docker compose down |
+| **Reiniciar cambios** | docker compose up -d --build |
+| **Borrar todo (datos incluidos)** | docker compose down -v |
 
-```
+## ?? Estructura del Proyecto
+
+	ext
 gelma-web/
-├── public/              # Archivos estáticos
-├── src/
-│   ├── components/      # Componentes reutilizables
-│   ├── pages/           # Páginas principales
-│   │   ├── Dashboard.jsx
-│   │   ├── Clientes.jsx
-│   │   ├── Productos.jsx
-│   │   ├── Pedidos.jsx
-│   │   └── Informes.jsx
-│   ├── services/        # Servicios y APIs
-│   ├── App.jsx          # Componente principal
-│   ├── App.css          # Estilos globales
-│   ├── index.css        # Estilos base
-│   └── main.jsx         # Punto de entrada
-├── server/              # Backend Express.js
-│   ├── routes/          # Rutas de la API
-│   ├── controllers/     # Controladores
-│   ├── middleware/      # Middleware (auth, validación)
-│   ├── database/        # Scripts SQL (schema, seed)
-│   ├── Dockerfile       # Configuración Docker backend
-│   └── package.json     # Dependencias del backend
-├── docs/                # Documentación del proyecto
-├── Dockerfile           # Configuración Docker frontend
-├── docker-compose.yml   # Orquestación de servicios
-├── nginx.conf           # Configuración de Nginx
-├── index.html           # HTML principal
-├── package.json         # Dependencias y scripts
-└── vite.config.js       # Configuración de Vite
-```
++-- server/            # C�digo del Backend (Node.js/Express)
++-- src/               # C�digo del Frontend (React/Vite)
++-- docs/              # Documentaci�n t�cnica adicional
++-- docker-compose.yml # Orquestaci�n de contenedores
++-- Dockerfile         # Configuraci�n de imagen Frontend
++-- nginx.conf         # Configuraci�n del servidor web
 
-## Uso
 
-### Con Docker
-
-1. **Configurar entorno**: `cp .env.example .env` y editar variables
-2. **Iniciar servicios**: `docker-compose up -d`
-3. **Acceder**: 
-   - Frontend: http://localhost
-   - Backend API: http://localhost:5000
-   - Base de datos: localhost:5432
-
-### Desarrollo Manual
-
-1. **Iniciar la aplicación**: Ejecutar `npm run dev` para iniciar el servidor de desarrollo del frontend
-2. **Iniciar backend**: En otra terminal, `cd server && npm run dev`
-3. **Acceder**: Abrir el navegador en `http://localhost:3000`
-4. **Navegar**: Usar el menú lateral para acceder a las diferentes secciones
-5. **Gestionar datos**: Añadir, editar y eliminar registros según sea necesario
-6. **Generar informes**: Acceder a la sección de informes para visualizar estadísticas
-
-## Funcionalidades Destacadas
-
-- ✅ Interfaz intuitiva y moderna
-- ✅ Diseño responsivo
-- ✅ Gestión completa de CRUD para todas las entidades
-- ✅ Indicadores visuales de estado (badges de colores)
-- ✅ Gráficos de ventas integrados
-- ✅ Cálculos automáticos de totales
-- ✅ Validación de formularios
-- ✅ Modales para operaciones de alta
-
-## Próximas Mejoras
-
-- [x] Autenticación de usuarios (implementada en backend)
-- [x] Base de datos real con PostgreSQL
-- [x] API REST para comunicación backend
-- [x] Containerización con Docker
-- [ ] Notificaciones en tiempo real
-- [ ] Dashboard personalizado por rol
-- [ ] Historial de cambios y auditoría
-- [ ] Integración con sistemas de pago
-- [ ] Envío de emails automáticos (configurado, pendiente pruebas)
-
-## Licencia
-
-Proyecto desarrollado para la entidad GELMA.
+## ?? Usuarios de Prueba (Si aplica)
+*(Agregar aqu� usuarios por defecto si existen en el seed de la BD)*
 
 ---
-
-**Nota**: Esta es una aplicación frontend demostrativa. Para un entorno de producción, se recomienda implementar:
-- Backend con base de datos persistente
-- Sistema de autenticación y autorización
-- Validaciones del lado del servidor
-- Copias de seguridad automáticas
+**Desarrollado con ?? por el equipo GELMA**

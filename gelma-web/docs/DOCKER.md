@@ -1,194 +1,64 @@
-# 🐳 Configuración Docker para GELMA
+# ?? Gu�a T�cnica de Despliegue con Docker
 
-Este directorio contiene toda la configuración necesaria para ejecutar el proyecto GELMA usando Docker y Docker Compose.
+Esta gu�a detalla c�mo configurar, ejecutar y solucionar problemas comunes del entorno Docker de GELMA.
 
-## 📁 Archivos Creados
+## 1. Arquitectura del Contenedor
 
-### Frontend (`/gelma-web/`)
-- **`Dockerfile`**: Construye la aplicación React con Vite y la sirve con Nginx
-- **`nginx.conf`**: Configuración de Nginx para SPA con proxy inverso al backend
-- **`.dockerignore`**: Excluye archivos innecesarios de la imagen Docker
-- **`docker-compose.yml`**: Orquesta todos los servicios (DB, Backend, Frontend)
-- **`.env.example`**: Plantilla de variables de entorno
+El sistema utiliza **Docker Compose** para orquestar 3 servicios principales:
 
-### Backend (`/gelma-web/server/`)
-- **`Dockerfile`**: Ya existía, configura el backend con Node.js y nodemon
-- **`.dockerignore`**: Excluye archivos innecesarios de la imagen Docker
+1.  **db (PostgreSQL):** Base de datos persistente.
+2.  **backend (Node.js):** API RESTful que se conecta a la DB.
+3.  **frontend (Nginx + React):** Servidor web est�tico que act�a como proxy inverso hacia el backend.
 
-## 🚀 Uso Rápido
+## 2. Instrucciones de Instalaci�n
 
-### 1. Configurar Variables de Entorno
+### A. Clonar y Preparar
+ash
+git clone https://github.com/sdiazcatala/info.git
+cd info/gelma-web
+git checkout desarrollo
 
-```bash
-cd /workspace/gelma-web
+
+### B. Configurar Entorno
+Copia el archivo de variables de ejemplo:
+ash
+# Linux/Mac
 cp .env.example .env
-```
 
-Edita el archivo `.env` y ajusta las variables según tu entorno, especialmente:
-- `JWT_SECRET`: Cambia por un secreto seguro en producción
-- `MAIL_USER` y `MAIL_PASSWORD`: Configura si usarás envío de correos
+# Windows PowerShell
+Copy-Item .env.example .env
 
-### 2. Iniciar Todos los Servicios
 
-```bash
-docker-compose up -d
-```
+### C. Ejecutar
+ash
+docker compose up -d
 
-Esto levantará:
-- **PostgreSQL** (puerto 5432)
-- **Backend API** (puerto 5000)
-- **Frontend** (puerto 80)
 
-### 3. Verificar Estado
+## 3. Soluci�n de Problemas Comunes
 
-```bash
-docker-compose ps
-```
+### Error 403 Forbidden al descargar im�genes
+Si ves errores como pull access denied o 403 Forbidden, es posible que Docker Hub est� bloqueando tu IP regional.
+**Soluci�n:** El proyecto ya est� configurado para usar mirrors alternativos (docker.m.daocloud.io). Si falla, verifica tu conexi�n a internet o reinicia Docker Desktop.
 
-### 4. Ver Logs
+### Error de Versi�n de Node (Vite requires Node.js 20+)
+Si el build del frontend falla mencionando la versi�n de Node:
+1.  Verifica que el Dockerfile en la ra�z use FROM node:20-alpine.
+2.  Reconstruye sin cach�: docker compose build --no-cache frontend.
 
-```bash
-# Todos los servicios
-docker-compose logs -f
+### La API responde "Ruta no encontrada"
+Esto es normal si entras a http://localhost:5000/api directamente sin una ruta espec�fica.
+- Usa http://localhost:5000/api/health para probar conexi�n.
+- Usa http://localhost para navegar por la aplicaci�n completa.
 
-# Solo backend
-docker-compose logs -f backend
+### Reiniciar desde cero (Borrar Base de Datos)
+?? **Advertencia:** Esto eliminar� todos los datos guardados.
+ash
+docker compose down -v
+docker compose up -d
 
-# Solo frontend
-docker-compose logs -f frontend
 
-# Solo base de datos
-docker-compose logs -f db
-```
+## 4. Desarrollo Local
 
-### 5. Acceder a la Aplicación
-
-- **Frontend**: http://localhost
-- **Backend API**: http://localhost:5000
-- **Base de Datos**: localhost:5432
-
-### 6. Detener Servicios
-
-```bash
-docker-compose down
-```
-
-Para eliminar también volúmenes (base de datos):
-```bash
-docker-compose down -v
-```
-
-## 🔧 Comandos Útiles
-
-### Reconstruir Imágenes
-
-```bash
-docker-compose build --no-cache
-```
-
-### Reiniciar un Servicio
-
-```bash
-docker-compose restart backend
-```
-
-### Ejecutar Comandos en Contenedores
-
-```bash
-# Backend
-docker-compose exec backend npm run dev
-
-# Base de datos (psql)
-docker-compose exec db psql -U postgres -d gelma_db
-```
-
-### Ver Uso de Recursos
-
-```bash
-docker stats
-```
-
-## 🏗️ Arquitectura Docker
-
-```
-┌─────────────────┐
-│   Frontend      │  Puerto 80
-│   (Nginx + React)│
-└────────┬────────┘
-         │ Proxy /api
-         ▼
-┌─────────────────┐
-│   Backend       │  Puerto 5000
-│   (Express.js)  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│   PostgreSQL    │  Puerto 5432
-│   (gelma_db)    │
-└─────────────────┘
-```
-
-## 📝 Notas Importantes
-
-### Desarrollo vs Producción
-
-- **Desarrollo**: El backend usa `nodemon` para recargar automáticamente
-- **Producción**: Cambia `NODE_ENV=production` en el `.env`
-
-### Volúmenes Persistentes
-
-- Los datos de PostgreSQL se guardan en un volumen Docker llamado `postgres_data`
-- Los logs del backend se montan desde `./server/logs`
-
-### Seguridad
-
-⚠️ **Importante para Producción**:
-1. Cambia `JWT_SECRET` por un valor único y seguro
-2. Usa contraseñas fuertes para la base de datos
-3. No expongas puertos innecesariamente
-4. Considera usar HTTPS con un reverse proxy (ej. Traefik, Nginx Proxy Manager)
-
-## 🐛 Solución de Problemas
-
-### El Backend no se Conecta a la DB
-
-Verifica que la DB esté saludable:
-```bash
-docker-compose ps
-docker-compose logs db
-```
-
-### El Frontend no Muestra la Aplicación
-
-Revisa los logs:
-```bash
-docker-compose logs frontend
-```
-
-### Cambios en el Código no se Reflejan
-
-- **Backend**: Debería recargar automáticamente con nodemon
-- **Frontend**: Reconstruye la imagen:
-  ```bash
-  docker-compose build frontend
-  docker-compose up -d frontend
-  ```
-
-### Errores de Permisos en Logs
-
-```bash
-mkdir -p ./server/logs
-chmod 777 ./server/logs
-```
-
-## 📊 Recursos
-
-- [Documentación de Docker](https://docs.docker.com/)
-- [Documentación de Docker Compose](https://docs.docker.com/compose/)
-- [Guía de Nginx para React](https://mherman.org/posts/dockerizing-a-react-app/)
-
----
-
-**Última actualización**: Diciembre 2025
-**Versión**: 1.0.0
+Si deseas modificar c�digo y ver cambios:
+- **Frontend:** Los cambios en src/ suelen requerir reconstruir el contenedor o montar vol�menes (configuraci�n avanzada).
+- **Backend:** Los cambios en server/ pueden requerir reiniciar el servicio: docker compose restart backend.
