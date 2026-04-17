@@ -39,28 +39,51 @@ El sistema incluye las siguientes funcionalidades:
 
 ## Tecnologías Utilizadas
 
-- **React 18** - Framework de JavaScript para interfaces de usuario
-- **Vite** - Build tool y servidor de desarrollo
-- **React Router DOM** - Navegación entre páginas
-- **CSS3** - Estilos modernos y responsivos
+- **Frontend**: React 18, Vite, React Router DOM, CSS3
+- **Backend**: Node.js, Express.js, JWT, bcryptjs
+- **Base de Datos**: PostgreSQL 15
+- **Containerización**: Docker, Docker Compose
+- **Servidor Web**: Nginx (para producción)
 
 ## Instalación
+
+### Opción 1: Con Docker (Recomendado)
 
 ```bash
 # Navegar al directorio del proyecto
 cd gelma-web
 
-# Instalar dependencias
+# Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus configuraciones
+
+# Iniciar todos los servicios
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+```
+
+Para más detalles, consulta [Documentación Docker](docs/DOCKER.md).
+
+### Opción 2: Manual (Desarrollo)
+
+```bash
+# Navegar al directorio del proyecto
+cd gelma-web
+
+# Instalar dependencias del frontend
 npm install
 
-# Iniciar servidor de desarrollo
+# Iniciar servidor de desarrollo del frontend
 npm run dev
 
-# Construir para producción
-npm run build
+# En otra terminal, instalar dependencias del backend
+cd server
+npm install
 
-# Vista previa de producción
-npm run preview
+# Iniciar servidor de desarrollo del backend
+npm run dev
 ```
 
 ## Estructura del Proyecto
@@ -81,6 +104,17 @@ gelma-web/
 │   ├── App.css          # Estilos globales
 │   ├── index.css        # Estilos base
 │   └── main.jsx         # Punto de entrada
+├── server/              # Backend Express.js
+│   ├── routes/          # Rutas de la API
+│   ├── controllers/     # Controladores
+│   ├── middleware/      # Middleware (auth, validación)
+│   ├── database/        # Scripts SQL (schema, seed)
+│   ├── Dockerfile       # Configuración Docker backend
+│   └── package.json     # Dependencias del backend
+├── docs/                # Documentación del proyecto
+├── Dockerfile           # Configuración Docker frontend
+├── docker-compose.yml   # Orquestación de servicios
+├── nginx.conf           # Configuración de Nginx
 ├── index.html           # HTML principal
 ├── package.json         # Dependencias y scripts
 └── vite.config.js       # Configuración de Vite
@@ -88,11 +122,23 @@ gelma-web/
 
 ## Uso
 
-1. **Iniciar la aplicación**: Ejecutar `npm run dev` para iniciar el servidor de desarrollo
-2. **Acceder**: Abrir el navegador en `http://localhost:3000`
-3. **Navegar**: Usar el menú lateral para acceder a las diferentes secciones
-4. **Gestionar datos**: Añadir, editar y eliminar registros según sea necesario
-5. **Generar informes**: Acceder a la sección de informes para visualizar estadísticas
+### Con Docker
+
+1. **Configurar entorno**: `cp .env.example .env` y editar variables
+2. **Iniciar servicios**: `docker-compose up -d`
+3. **Acceder**: 
+   - Frontend: http://localhost
+   - Backend API: http://localhost:5000
+   - Base de datos: localhost:5432
+
+### Desarrollo Manual
+
+1. **Iniciar la aplicación**: Ejecutar `npm run dev` para iniciar el servidor de desarrollo del frontend
+2. **Iniciar backend**: En otra terminal, `cd server && npm run dev`
+3. **Acceder**: Abrir el navegador en `http://localhost:3000`
+4. **Navegar**: Usar el menú lateral para acceder a las diferentes secciones
+5. **Gestionar datos**: Añadir, editar y eliminar registros según sea necesario
+6. **Generar informes**: Acceder a la sección de informes para visualizar estadísticas
 
 ## Funcionalidades Destacadas
 
@@ -107,14 +153,15 @@ gelma-web/
 
 ## Próximas Mejoras
 
-- [ ] Autenticación de usuarios
-- [ ] Base de datos real (actualmente usa estado local)
-- [ ] API REST para comunicación backend
+- [x] Autenticación de usuarios (implementada en backend)
+- [x] Base de datos real con PostgreSQL
+- [x] API REST para comunicación backend
+- [x] Containerización con Docker
 - [ ] Notificaciones en tiempo real
 - [ ] Dashboard personalizado por rol
 - [ ] Historial de cambios y auditoría
 - [ ] Integración con sistemas de pago
-- [ ] Envío de emails automáticos
+- [ ] Envío de emails automáticos (configurado, pendiente pruebas)
 
 ## Licencia
 
